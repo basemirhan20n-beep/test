@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parti Yönetim Dashboardu</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>body{font-family:sans-serif;margin:20px}</style>
+</head>
+<body>
+    <h1>🏆 Cumhuriyet Süper Ligi Yönetim Paneli</h1>
+    <div id="lig1"></div>
+    <div id="lig2"></div>
+    <div id="gol_krallari"></div>
+    <div id="istatistikler"></div>
+    <script>
+        fetch('/api/lig_tablosu/1').then(r=>r.json()).then(data=>{
+            let html='<h2>Süper Lig</h2><table border=1><tr><th>Takım</th><th>Puan</th><th>G</th><th>B</th><th>M</th><th>AG</th><th>YG</th></tr>';
+            data.forEach(t=>html+=`<tr><td>${t.isim}</td><td>${t.puan}</td><td>${t.galibiyet}</td><td>${t.beraberlik}</td><td>${t.maglubiyet}</td><td>${t.atilan_gol}</td><td>${t.yenilen_gol}</td></tr>`);
+            html+='</table>'; document.getElementById('lig1').innerHTML=html;
+        });
+        fetch('/api/lig_tablosu/2').then(r=>r.json()).then(data=>{
+            let html='<h2>1. Lig</h2><table border=1></td><th>Takım</th><th>Puan</th><th>G</th><th>B</th><th>M</th><th>AG</th><th>YG</th></tr>';
+            data.forEach(t=>html+=`<tr><td>${t.isim}</td><td>${t.puan}</td><td>${t.galibiyet}</td><td>${t.beraberlik}</td><td>${t.maglubiyet}</td><td>${t.atilan_gol}</td><td>${t.yenilen_gol}</td></tr>`);
+            html+='</table>'; document.getElementById('lig2').innerHTML=html;
+        });
+        fetch('/api/gol_krallari').then(r=>r.json()).then(data=>{
+            let html='<h2>⚽ Gol Kralları</h2><table border=1><tr><th>Oyuncu</th><th>Gol</th><th>Takım</th></tr>';
+            data.forEach(g=>html+=`<tr><td>${g.isim}</td><td>${g.gol}</td><td>${g.takim}</td></tr>`);
+            html+='</table>'; document.getElementById('gol_krallari').innerHTML=html;
+        });
+        fetch('/api/istatistikler').then(r=>r.json()).then(data=>{
+            document.getElementById('istatistikler').innerHTML=`<h2>📊 Genel İstatistikler</h2><p>Takım Sayısı: ${data.takim_sayisi}</p><p>Oyuncu Sayısı: ${data.oyuncu_sayisi}</p><p>Oynanan Maç: ${data.mac_sayisi}</p>`;
+        });
+    </script>
+</body>
+</html>
